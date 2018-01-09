@@ -1,5 +1,7 @@
 package com.codecool.michalurban.flightconnector.common;
 
-public class ModelPatcher {
+public interface ModelPatcher {
 
+    void applyPatch();
+    Object getUpdatedObject();
 }
