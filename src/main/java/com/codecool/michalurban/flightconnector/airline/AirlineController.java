@@ -42,7 +42,7 @@ public class AirlineController {
     @PatchMapping(path = "/{id}")
     public Airline patch(@PathVariable Integer id, @RequestBody Airline airline) {
 
-        return service.patch(id, airline); // TODO
+        return service.patch(id, airline);
     }
 
 }

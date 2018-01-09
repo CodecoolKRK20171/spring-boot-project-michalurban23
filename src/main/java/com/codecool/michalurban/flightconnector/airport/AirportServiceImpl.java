@@ -47,10 +47,13 @@ public class AirportServiceImpl implements AirportService {
 
         Airport oldAirport = repository.findOne(id);
 
-        ModelPatcher patcher = new AirportPatcher(oldAirport, patchingAirport);
-        patcher.applyPatch();
-
-        return repository.save((Airport) patcher.getUpdatedObject());
+        if (oldAirport == null) {
+            throw new EntityNotFoundException("No resource with such id");
+        } else {
+            ModelPatcher patcher = new AirportPatcher(oldAirport, patchingAirport);
+            patcher.applyPatch();
+            return repository.save((Airport) patcher.getUpdatedObject());
+        }
     }
 
 }

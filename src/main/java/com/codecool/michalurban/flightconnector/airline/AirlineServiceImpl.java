@@ -1,9 +1,8 @@
 package com.codecool.michalurban.flightconnector.airline;
 
 import com.codecool.michalurban.flightconnector.common.ModelPatcher;
+import com.codecool.michalurban.flightconnector.exception.EntityNotFoundException;
 import org.springframework.stereotype.Service;
-
-import javax.jws.WebParam;
 
 @Service
 public class AirlineServiceImpl implements AirlineService {
@@ -24,7 +23,11 @@ public class AirlineServiceImpl implements AirlineService {
     @Override
     public Airline find(Integer id) {
 
-        return repository.findOne(id);
+        if (repository.exists(id)) {
+            return repository.findOne(id);
+        } else {
+            throw new EntityNotFoundException("No object with this ID");
+        }
     }
 
     @Override
@@ -44,10 +47,13 @@ public class AirlineServiceImpl implements AirlineService {
 
         Airline oldAirline = repository.findOne(id);
 
-        ModelPatcher patcher = new AirlinePatcher(oldAirline, patchingAirline);
-        patcher.applyPatch();
-
-        return repository.save((Airline) patcher.getUpdatedObject());
+        if (oldAirline == null) {
+            throw new EntityNotFoundException("No resource with such id");
+        } else {
+            ModelPatcher patcher = new AirlinePatcher(oldAirline, patchingAirline);
+            patcher.applyPatch();
+            return repository.save((Airline) patcher.getUpdatedObject());
+        }
     }
 
 }

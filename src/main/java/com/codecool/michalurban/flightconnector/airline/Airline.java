@@ -1,13 +1,19 @@
 package com.codecool.michalurban.flightconnector.airline;
 
 import com.codecool.michalurban.flightconnector.airport.Airport;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
-@Table(name = "Airline")
+// @JsonIdentityInfo(
+//         generator = ObjectIdGenerators.PropertyGenerator.class,
+//         property = "id")
 public class Airline {
 
     @Id
@@ -21,6 +27,8 @@ public class Airline {
     private String countryOfOrigin;
 
     @ManyToMany(mappedBy = "airlines")
+    // @JsonBackReference
+    @JsonIgnore
     private Set<Airport> airports;
 
     public Integer getId() {

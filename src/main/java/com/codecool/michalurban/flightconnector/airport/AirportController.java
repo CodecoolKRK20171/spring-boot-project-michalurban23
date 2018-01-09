@@ -42,7 +42,7 @@ public class AirportController {
     @PatchMapping(path = "/{id}")
     public Airport patch(@PathVariable Integer id, @RequestBody Airport airport) {
 
-        return service.patch(id, airport); // TODO
+        return service.patch(id, airport);
     }
 
 }

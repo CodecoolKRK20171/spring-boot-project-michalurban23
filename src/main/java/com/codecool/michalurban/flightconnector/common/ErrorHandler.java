@@ -53,14 +53,6 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(apiError);
     }
 
-    // @ExceptionHandler(DataIntegrityViolationException.class)
-    // public ResponseEntity<Object> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
-    //
-    //     ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex);
-    //
-    //     return buildResponseEntity(apiError);
-    // }
-
     private ResponseEntity<Object> buildResponseEntity(ApiError apiError) {
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
