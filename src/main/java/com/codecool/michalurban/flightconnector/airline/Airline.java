@@ -1,7 +1,10 @@
 package com.codecool.michalurban.flightconnector.airline;
 
+import com.codecool.michalurban.flightconnector.airport.Airport;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @Entity
 @Table(name = "Airline")
@@ -16,6 +19,9 @@ public class Airline {
     private String name;
 
     private String countryOfOrigin;
+
+    @ManyToMany(mappedBy = "airlines")
+    private Set<Airport> airports;
 
     public Integer getId() {
 
@@ -47,4 +53,13 @@ public class Airline {
         this.countryOfOrigin = countryOfOrigin;
     }
 
+    public Set<Airport> getAirports() {
+
+        return airports;
+    }
+
+    public void setAirports(Set<Airport> airports) {
+
+        this.airports = airports;
+    }
 }

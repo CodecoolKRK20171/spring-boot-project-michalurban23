@@ -1,6 +1,9 @@
 package com.codecool.michalurban.flightconnector.airline;
 
+import com.codecool.michalurban.flightconnector.common.ModelPatcher;
 import org.springframework.stereotype.Service;
+
+import javax.jws.WebParam;
 
 @Service
 public class AirlineServiceImpl implements AirlineService {
@@ -37,10 +40,14 @@ public class AirlineServiceImpl implements AirlineService {
     }
 
     @Override
-    public Airline patch(Integer id, Airline airline) {
+    public Airline patch(Integer id, Airline patchingAirline) {
 
-        return null; // TODO
+        Airline oldAirline = repository.findOne(id);
+
+        ModelPatcher patcher = new AirlinePatcher(oldAirline, patchingAirline);
+        patcher.applyPatch();
+
+        return repository.save((Airline) patcher.getUpdatedObject());
     }
-
 
 }

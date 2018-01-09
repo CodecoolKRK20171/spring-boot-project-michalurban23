@@ -1,5 +1,7 @@
 package com.codecool.michalurban.flightconnector.airport;
 
+import com.codecool.michalurban.flightconnector.common.ModelPatcher;
+import com.codecool.michalurban.flightconnector.exception.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,7 +23,11 @@ public class AirportServiceImpl implements AirportService {
     @Override
     public Airport find(Integer id) {
 
-        return repository.findOne(id);
+        if (repository.exists(id)) {
+            return repository.findOne(id);
+        } else {
+            throw new EntityNotFoundException("No object with this ID");
+        }
     }
 
     @Override
@@ -37,9 +43,14 @@ public class AirportServiceImpl implements AirportService {
     }
 
     @Override
-    public Airport patch(Integer id, Airport airport) {
+    public Airport patch(Integer id, Airport patchingAirport) {
 
-        return null; // TODO
+        Airport oldAirport = repository.findOne(id);
+
+        ModelPatcher patcher = new AirportPatcher(oldAirport, patchingAirport);
+        patcher.applyPatch();
+
+        return repository.save((Airport) patcher.getUpdatedObject());
     }
 
 }
