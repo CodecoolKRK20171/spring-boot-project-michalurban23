@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -14,6 +15,7 @@ import java.util.Set;
 // @JsonIdentityInfo(
 //         generator = ObjectIdGenerators.PropertyGenerator.class,
 //         property = "id")
+@JsonSerialize(using = AirlineSerializer.class)
 public class Airline {
 
     @Id
@@ -28,7 +30,7 @@ public class Airline {
 
     @ManyToMany(mappedBy = "airlines")
     // @JsonBackReference
-    @JsonIgnore
+    // @JsonIgnore
     private Set<Airport> airports;
 
     public Integer getId() {

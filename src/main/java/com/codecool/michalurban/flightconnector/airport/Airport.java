@@ -4,6 +4,7 @@ import com.codecool.michalurban.flightconnector.airline.Airline;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -13,6 +14,7 @@ import java.util.Set;
 // @JsonIdentityInfo(
 //         generator = ObjectIdGenerators.PropertyGenerator.class,
 //         property = "id")
+@JsonSerialize(using = AirportSerializer.class)
 public class Airport {
 
     @Id
