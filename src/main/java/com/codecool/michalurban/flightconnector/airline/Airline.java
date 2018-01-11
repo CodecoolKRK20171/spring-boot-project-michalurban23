@@ -1,10 +1,8 @@
 package com.codecool.michalurban.flightconnector.airline;
 
 import com.codecool.michalurban.flightconnector.airport.Airport;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.persistence.*;
@@ -12,10 +10,9 @@ import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
-// @JsonIdentityInfo(
-//         generator = ObjectIdGenerators.PropertyGenerator.class,
-//         property = "id")
 @JsonSerialize(using = AirlineSerializer.class)
+@JsonDeserialize(using = AirlineDeserializer.class)
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "archived"})})
 public class Airline {
 
     @Id
@@ -23,14 +20,14 @@ public class Airline {
     private Integer id;
 
     @NotNull
-    @Column(unique = true)
     private String name;
 
     private String countryOfOrigin;
 
-    @ManyToMany(mappedBy = "airlines")
-    // @JsonBackReference
-    // @JsonIgnore
+    @NotNull
+    private Boolean archived = false;
+
+    @ManyToMany(mappedBy = "airlines", cascade = {CascadeType.DETACH})
     private Set<Airport> airports;
 
     public Integer getId() {
@@ -71,5 +68,15 @@ public class Airline {
     public void setAirports(Set<Airport> airports) {
 
         this.airports = airports;
+    }
+
+    public Boolean getArchived() {
+
+        return archived;
+    }
+
+    public void setArchived(Boolean archived) {
+
+        this.archived = archived;
     }
 }

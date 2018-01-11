@@ -25,9 +25,12 @@ public class AirlineSerializer extends StdSerializer<Airline> {
         generator.writeNumberField("id", airline.getId());
         generator.writeStringField("name", airline.getName());
         generator.writeStringField("countryOfOrigin", airline.getCountryOfOrigin());
-        generator.writeArrayFieldStart("airlinesId");
-        for(Airport airport: airline.getAirports()) {
-            generator.writeNumber(airport.getId());
+        generator.writeArrayFieldStart("airports");
+        Iterable<Airport> airports = airline.getAirports();
+        if (airports != null) {
+            for (Airport airport : airline.getAirports()) {
+                generator.writeNumber(airport.getId());
+            }
         }
         generator.writeEndArray();
         generator.writeEndObject();
