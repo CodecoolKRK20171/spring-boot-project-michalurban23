@@ -1,10 +1,6 @@
 package com.codecool.michalurban.flightconnector.common;
 
 import com.codecool.michalurban.flightconnector.exception.EntityNotFoundException;
-import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-@Order(Ordered.HIGHEST_PRECEDENCE)
+// @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 public class ErrorHandler extends ResponseEntityExceptionHandler {
 
@@ -44,10 +40,22 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(apiError);
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException ex) {
+    @ExceptionHandler({javax.validation.ConstraintViolationException.class,
+            org.springframework.dao.DataIntegrityViolationException.class,
+            org.hibernate.exception.ConstraintViolationException.class})
+    public ResponseEntity<Object> handleConstraintViolation(Exception ex) {
 
-        String errorMessage = "Violation of unique constraint on one or more fields";
+        String errorMessage = "Violation of unique constraint on one or more fields. Either object with specified " +
+                "parameter already exists or not all required fields were specified.";
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, errorMessage);
+
+        return buildResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<Object> handleNullPointer(NullPointerException ex) {
+
+        String errorMessage = "Not all required fields specified";
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, errorMessage);
 
         return buildResponseEntity(apiError);
