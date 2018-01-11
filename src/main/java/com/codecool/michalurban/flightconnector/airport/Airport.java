@@ -1,20 +1,20 @@
 package com.codecool.michalurban.flightconnector.airport;
 
 import com.codecool.michalurban.flightconnector.airline.Airline;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.codecool.michalurban.flightconnector.airline.AirlineDeserializer;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
-// @JsonIdentityInfo(
-//         generator = ObjectIdGenerators.PropertyGenerator.class,
-//         property = "id")
 @JsonSerialize(using = AirportSerializer.class)
+@JsonDeserialize(using = AirportDeserializer.class)
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"shortName", "archived"})})
 public class Airport {
 
     @Id
@@ -25,18 +25,19 @@ public class Airport {
     private String country;
 
     @NotNull
-    @Column(unique = true)
     private String shortName;
+
+    @NotNull
+    private Boolean archived = false;
 
     private String longName;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.DETACH})
     @JoinTable(
             name = "airport_airline",
             joinColumns = { @JoinColumn(name = "airport_id") },
             inverseJoinColumns = { @JoinColumn(name = "airline_id") }
     )
-    // @JsonManagedReference
     private Set<Airline> airlines;
 
     public Integer getId() {
@@ -87,5 +88,15 @@ public class Airport {
     public void setAirlines(Set<Airline> airlines) {
 
         this.airlines = airlines;
+    }
+
+    public Boolean getArchived() {
+
+        return archived;
+    }
+
+    public void setArchived(Boolean archived) {
+
+        this.archived = archived;
     }
 }
