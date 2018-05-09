@@ -2,6 +2,7 @@ package com.codecool.michalurban.flightconnector.airline;
 
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin
 @RestController
 @RequestMapping(path = "/airlines")
 public class AirlineController {
